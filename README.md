@@ -344,6 +344,15 @@ Open <http://localhost:3000> and sign in with your Google account.
 
 ### Local runtime (two processes)
 
+<div align="center">
+
+![Local runtime — Next.js on :3000, Uvicorn on :8000, plus Gemini, Firebase, and Instagram Graph](docs/assets/local-runtime.svg)
+
+</div>
+
+<details>
+<summary>View as Mermaid (source of truth)</summary>
+
 ```mermaid
 %%{init: { "theme": "neutral" }}%%
 flowchart TB
@@ -358,6 +367,8 @@ flowchart TB
   FE --> FB2((Firebase))
   BE --> IG2((Instagram Graph))
 ```
+
+</details>
 
 <br />
 

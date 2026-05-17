@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Local development runtime – two processes</title>
+  <desc id="desc">You use Next.js on port 3000, which calls Uvicorn on port 8000 over REST, and connects to Gemini, Firebase, and Instagram Graph.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="panelStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="nextFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="apiFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#115e59"/>
+    </linearGradient>
+    <linearGradient id="youFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="gemFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="fbFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="igFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f472b6"/>
+      <stop offset="50%" stop-color="#c026d3"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowHeadAccent" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366f1"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="520" fill="#fafafa"/>
+  <circle cx="120" cy="80" r="120" fill="#e0e7ff" opacity="0.35"/>
+  <circle cx="780" cy="420" r="160" fill="#fce7f3" opacity="0.35"/>
+
+  <rect x="64" y="92" width="458" height="298" rx="22" fill="url(#panel)" stroke="url(#panelStroke)" stroke-width="2.5" filter="url(#softShadow)"/>
+  <text x="293" y="124" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#4338ca" letter-spacing="0.06em">YOUR MACHINE</text>
+  <text x="293" y="142" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" fill="#64748b">Local development</text>
+
+  <circle cx="293" cy="48" r="26" fill="url(#youFill)" filter="url(#cardShadow)"/>
+  <text x="293" y="54" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="700" fill="#ffffff">You</text>
+
+  <rect x="100" y="158" width="386" height="88" rx="16" fill="url(#nextFill)" filter="url(#cardShadow)"/>
+  <rect x="100" y="158" width="6" height="88" rx="3" fill="#38bdf8"/>
+  <text x="128" y="192" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="17" font-weight="800" fill="#f8fafc">Next.js</text>
+  <text x="128" y="214" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" fill="#94a3b8">:3000 - App Router UI</text>
+  <text x="128" y="235" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" fill="#64748b" font-weight="600">localhost:3000</text>
+
+  <rect x="100" y="274" width="386" height="88" rx="16" fill="url(#apiFill)" filter="url(#cardShadow)"/>
+  <rect x="100" y="274" width="6" height="88" rx="3" fill="#5eead4"/>
+  <text x="128" y="308" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="17" font-weight="800" fill="#ecfdf5">Uvicorn</text>
+  <text x="128" y="330" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="13" fill="#99f6e4">:8000 - instagram_api.py</text>
+  <text x="128" y="351" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" fill="#5eead4" opacity="0.9" font-weight="600">FastAPI sidecar</text>
+
+  <circle cx="698" cy="168" r="56" fill="url(#gemFill)" filter="url(#cardShadow)"/>
+  <text x="698" y="164" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="800" fill="#ffffff">Gemini</text>
+  <text x="698" y="182" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5" fill="#dbeafe">Google AI</text>
+
+  <circle cx="698" cy="312" r="56" fill="url(#fbFill)" filter="url(#cardShadow)"/>
+  <text x="698" y="308" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="15" font-weight="800" fill="#422006">Firebase</text>
+  <text x="698" y="326" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="10.5" fill="#78350f">Auth - data</text>
+
+  <circle cx="293" cy="448" r="58" fill="url(#igFill)" filter="url(#cardShadow)"/>
+  <text x="293" y="440" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="800" fill="#ffffff">Instagram</text>
+  <text x="293" y="458" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" fill="#fce7f3">Graph API</text>
+
+  <path d="M 293 74 L 293 158" fill="none" stroke="#6366f1" stroke-width="2.5" marker-end="url(#arrowHeadAccent)"/>
+
+  <path d="M 293 246 L 293 274" fill="none" stroke="#64748b" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#arrowHead)"/>
+  <rect x="246" y="252" width="52" height="20" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="272" y="266" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="10" font-weight="700" fill="#475569">REST</text>
+
+  <path d="M 486 202 C 560 202, 620 180, 642 168" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+  <path d="M 486 220 C 570 240, 630 290, 646 308" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+  <path d="M 293 362 L 293 390" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrowHead)"/>
+
+  <rect x="64" y="482" width="688" height="1" fill="#e2e8f0"/>
+  <text x="408" y="506" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="11" fill="#64748b">Browser UI: Gemini and Firebase. Sidecar: Instagram Graph.</text>
+</svg>
