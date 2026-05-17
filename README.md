@@ -33,8 +33,39 @@ Plan feeds · Generate creatives · Schedule campaigns · Read the room — **on
   <a href="#architecture">Architecture</a> ·
   <a href="#quickstart">Quickstart</a> ·
   <a href="#project-structure">Structure</a> ·
-  <a href="#api-surface">API</a>
+  <a href="#api-surface">API</a> ·
+  <a href="#scripts">Scripts</a> ·
+  <a href="#roadmap">Roadmap</a> ·
+  <a href="#tech-stack">Stack</a>
 </p>
+
+---
+
+## Contents
+
+<table>
+<tr>
+<td valign="top" width="50%">
+
+**Get oriented**
+
+1. [At a glance](#at-a-glance) — the loop in one diagram
+2. [What's inside](#whats-inside) — six core surfaces, feature map
+3. [Architecture](#architecture) — topology, request flow, routes
+
+</td>
+<td valign="top" width="50%">
+
+**Build & ship**
+
+4. [Quickstart](#quickstart) — prereqs, env, run
+5. [Project structure](#project-structure) — directory map
+6. [API surface](#api-surface) — Next handlers + FastAPI sidecar
+7. [Scripts](#scripts) · [Roadmap](#roadmap) · [Tech stack](#tech-stack)
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -53,11 +84,22 @@ How teams move through the workspace — from intent to insight:
 ```mermaid
 %%{init: { "theme": "neutral", "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" } }}%%
 flowchart LR
-  A(["Intent & ideas"]) --> B(["Calendar + grid"]) --> C(["Copy + visuals"]) --> D(["Queue & publish"]) --> E(["Analytics + AI"])
+  A(["Intent &amp; ideas"]) --> B(["Calendar + grid"]) --> C(["Copy + visuals"]) --> D(["Queue &amp; publish"]) --> E(["Analytics + AI"])
   E -.->|"iterate"| A
 
-  classDef node fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#0f172a
-  class A,B,C,D,E node
+  classDef intent fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+  classDef plan   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
+  classDef make   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef ship   fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
+  classDef learn  fill:#fce7f3,stroke:#db2777,stroke-width:1.8px,color:#831843
+
+  class A intent
+  class B plan
+  class C make
+  class D ship
+  class E learn
+
+  linkStyle default stroke:#94a3b8,stroke-width:1.6px
 ```
 
 <br />
@@ -219,7 +261,30 @@ flowchart TB
 ### Request voyage (generation example)
 
 ```mermaid
-%%{init: { "theme": "neutral" }}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "primaryColor": "#dbeafe",
+    "primaryBorderColor": "#2563eb",
+    "primaryTextColor": "#1e3a8a",
+    "actorBkg": "#dbeafe",
+    "actorBorder": "#2563eb",
+    "actorTextColor": "#1e3a8a",
+    "actorLineColor": "#94a3b8",
+    "signalColor": "#475569",
+    "signalTextColor": "#0f172a",
+    "labelBoxBkgColor": "#fef3c7",
+    "labelBoxBorderColor": "#d97706",
+    "labelTextColor": "#78350f",
+    "noteBkgColor": "#fef3c7",
+    "noteBorderColor": "#d97706",
+    "noteTextColor": "#78350f",
+    "activationBkgColor": "#ede9fe",
+    "activationBorderColor": "#7c3aed",
+    "sequenceNumberColor": "#ffffff"
+  }
+}}%%
 sequenceDiagram
   autonumber
   participant U as Creator
@@ -260,14 +325,14 @@ sequenceDiagram
 ```mermaid
 %%{init: { "theme": "neutral" }}%%
 flowchart LR
-  subgraph NextAPI["Next.js /src/app/api"]
+  subgraph NextAPI["Next.js · /src/app/api"]
     API1["/analytics/[user]"]
     API2["/generate/content"]
     API3["/generate/image"]
     API4["/automate/*"]
   end
 
-  subgraph Fast["FastAPI sidecar :8000"]
+  subgraph Fast["FastAPI sidecar · :8000"]
     P["POST /post"]
     S["POST /story"]
     H["POST /highlight"]
@@ -280,6 +345,23 @@ flowchart LR
   P --> IG
   S --> IG
   H --> IG
+
+  classDef nextapi fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+  classDef fastapi fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef ext     fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
+  classDef ai      fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
+  classDef chan    fill:#fce7f3,stroke:#db2777,stroke-width:1.8px,color:#831843
+
+  class API1,API2,API3,API4 nextapi
+  class P,S,H fastapi
+  class IG ext
+  class GEM ai
+  class CH chan
+
+  style NextAPI fill:#faf5ff,stroke:#a78bfa,stroke-width:1.6px,color:#4c1d95
+  style Fast    fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
+
+  linkStyle default stroke:#94a3b8,stroke-width:1.4px
 ```
 
 <br />
@@ -357,6 +439,7 @@ Open <http://localhost:3000> and sign in with your Google account.
 %%{init: { "theme": "neutral" }}%%
 flowchart TB
   subgraph Dev["Your machine"]
+    direction LR
     FE["Next.js :3000<br/>App Router UI"]
     BE["Uvicorn :8000<br/>instagram_api.py"]
   end
@@ -366,6 +449,23 @@ flowchart TB
   FE --> GEM2((Gemini))
   FE --> FB2((Firebase))
   BE --> IG2((Instagram Graph))
+
+  classDef fe   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
+  classDef be   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef user fill:#fce7f3,stroke:#db2777,stroke-width:1.8px,color:#831843
+  classDef ai   fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+  classDef ext  fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
+  classDef db   fill:#fef3c7,stroke:#d97706,stroke-width:1.8px,color:#78350f
+
+  class FE fe
+  class BE be
+  class U user
+  class GEM2 ai
+  class FB2 db
+  class IG2 ext
+
+  style Dev fill:#f8fafc,stroke:#94a3b8,stroke-width:1.6px,color:#0f172a
+  linkStyle default stroke:#94a3b8,stroke-width:1.4px
 ```
 
 </details>
@@ -462,20 +562,32 @@ Interactive docs at <http://localhost:8000/docs> (Swagger) or `/redoc`.
 %%{init: { "theme": "neutral" }}%%
 flowchart LR
   subgraph near["Near term"]
-    n1["Shorts adapters · deeper analytics"]
-    n2["Multi-account workspaces · RBAC"]
+    n1["Shorts adapters<br/>deeper analytics"]
+    n2["Multi-account workspaces<br/>RBAC"]
   end
   subgraph mid["Mid term"]
     m1["A/B captions and creatives"]
     m2["CSV and Notion bulk import"]
   end
   subgraph later["Later"]
-    l1["Webhook publish queue · retries"]
-    l2["SSR snapshots · shareable reports"]
+    l1["Webhook publish queue<br/>retries"]
+    l2["SSR snapshots<br/>shareable reports"]
   end
   near --> mid --> later
-  classDef phase fill:#f8fafc,stroke:#94a3b8,stroke-width:1.5px,color:#0f172a
-  class n1,n2,m1,m2,l1,l2 phase
+
+  classDef nearC  fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef midC   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
+  classDef laterC fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+
+  class n1,n2 nearC
+  class m1,m2 midC
+  class l1,l2 laterC
+
+  style near  fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
+  style mid   fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
+  style later fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+
+  linkStyle default stroke:#64748b,stroke-width:1.8px
 ```
 
 - TikTok and YouTube Shorts analytics adapters
@@ -526,8 +638,29 @@ flowchart LR
 <br />
 
 ```mermaid
-%%{init: { "theme": "neutral" }}%%
-pie title Where compute runs (illustrative split)
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "pie1": "#2563eb",
+    "pie2": "#7c3aed",
+    "pie3": "#16a34a",
+    "pie4": "#ea580c",
+    "pie5": "#d97706",
+    "pieTitleTextSize": "18px",
+    "pieTitleTextColor": "#0f172a",
+    "pieSectionTextSize": "13px",
+    "pieSectionTextColor": "#ffffff",
+    "pieStrokeColor": "#ffffff",
+    "pieStrokeWidth": "2px",
+    "pieOuterStrokeColor": "#cbd5e1",
+    "pieOuterStrokeWidth": "1px",
+    "pieLegendTextColor": "#0f172a",
+    "pieLegendTextSize": "13px",
+    "pieOpacity": "0.95"
+  }
+}}%%
+pie showData title Where compute runs (illustrative split)
     "Browser & Next.js UI" : 40
     "Next.js route handlers" : 25
     "Google Gemini" : 20
