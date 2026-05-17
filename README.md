@@ -208,52 +208,79 @@ A four-tier layout: **Experience** (Next.js App Router) → **API gateway** (Nex
 ### System topology
 
 ```mermaid
-%%{init: { "theme": "neutral" }}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "fontSize": "13px"
+  }
+}}%%
 flowchart TB
-  subgraph Experience["Experience layer"]
-    direction TB
-    SPA["Next.js 15 · React 19<br/>Tailwind v4 · Tremor · Fabric"]
-    AUTH["Firebase Auth<br/>Google SSO"]
+  USER(("Creator")):::user
+
+  subgraph L1["Experience layer"]
+    direction LR
+    SPA(["Next.js 15 App<br/>React 19 · Tailwind v4"]):::ui
+    STUDIO(["Studio surfaces<br/>Tremor · Recharts · Fabric"]):::ui
+    AUTHN(["Firebase Auth<br/>Google SSO"]):::auth
   end
 
-  subgraph Gateway["API gateway"]
-    ROUTES["Next.js Route Handlers<br/>src/app/api/*"]
+  subgraph L2["API gateway"]
+    direction LR
+    R1[["/api/generate/*"]]:::route
+    R2[["/api/automate/*"]]:::route
+    R3[["/api/analytics/[user]"]]:::route
   end
 
-  subgraph Intelligence["Intelligence plane"]
-    GEN["Generation<br/>content + image"]
-    AUTO["Automation<br/>email · WhatsApp blasts"]
-    ANA["Analytics aggregation<br/>per-username"]
+  subgraph L3["Intelligence plane"]
+    direction LR
+    GEN["Generation<br/>copy · imagery"]:::logic
+    AUTO["Automation<br/>email · WhatsApp blasts"]:::logic
+    ANA["Analytics aggregation<br/>per-username insights"]:::logic
   end
 
-  subgraph Providers["Model & data plane"]
-    GEM["Google Gemini<br/>@google/genai"]
-    IG["FastAPI · instagram_api<br/>localhost:8000"]
-    FB[("Firebase<br/>auth · persistence")]
+  subgraph L4["Model &amp; data plane"]
+    direction LR
+    GEM{{"Google Gemini<br/>@google/genai"}}:::ext
+    SIDECAR{{"FastAPI sidecar<br/>localhost:8000"}}:::ext
+    IG{{"Instagram Graph"}}:::ext
+    FB[("Firebase<br/>auth · firestore")]:::db
   end
 
-  SPA --> AUTH
-  SPA --> ROUTES
-  ROUTES --> GEN
-  ROUTES --> AUTO
-  ROUTES --> ANA
-  GEN --> GEM
-  AUTO --> IG
-  ANA --> IG
-  ANA --> FB
-  AUTH --> FB
+  USER ==>|"signs in"| AUTHN
+  USER ==>|"composes"| SPA
+  SPA --- STUDIO
+  AUTHN -.->|"session"| FB
 
-  classDef exp fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-  classDef gw fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95
-  classDef intel fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-  classDef data fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-  classDef db fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+  SPA ==>|"HTTP"| R1
+  SPA ==>|"HTTP"| R2
+  SPA ==>|"HTTP"| R3
 
-  class SPA,AUTH exp
-  class ROUTES gw
-  class GEN,AUTO,ANA intel
-  class GEM,IG data
-  class FB db
+  R1 --> GEN
+  R2 --> AUTO
+  R3 --> ANA
+
+  GEN -->|"prompt"| GEM
+  AUTO -->|"publish"| SIDECAR
+  AUTO -.->|"log"| FB
+  ANA -->|"metrics"| IG
+  ANA -.->|"cache"| FB
+  SIDECAR -->|"graph calls"| IG
+
+  classDef user  fill:#fce7f3,stroke:#db2777,stroke-width:2.2px,color:#831843
+  classDef ui    fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+  classDef auth  fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+  classDef route fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95
+  classDef logic fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+  classDef ext   fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+  classDef db    fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+
+  style L1 fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
+  style L2 fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+  style L3 fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
+  style L4 fill:#fff7ed,stroke:#fdba74,stroke-width:1.6px,color:#7c2d12
+
+  linkStyle default stroke:#94a3b8,stroke-width:1.4px
 ```
 
 <br />
@@ -323,43 +350,77 @@ sequenceDiagram
 ### API routing overview
 
 ```mermaid
-%%{init: { "theme": "neutral" }}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" }
+}}%%
 flowchart LR
-  subgraph NextAPI["Next.js · /src/app/api"]
-    API1["/analytics/[user]"]
-    API2["/generate/content"]
-    API3["/generate/image"]
-    API4["/automate/*"]
+  CLIENT(["Browser<br/>React UI"]):::client
+
+  subgraph CONTENT["Content creation"]
+    direction TB
+    GC[["POST /api/generate/content"]]:::next
+    GI[["POST /api/generate/image"]]:::next
   end
 
-  subgraph Fast["FastAPI sidecar · :8000"]
-    P["POST /post"]
-    S["POST /story"]
-    H["POST /highlight"]
+  subgraph DELIVERY["Delivery &amp; comms"]
+    direction TB
+    AM[["POST /api/automate"]]:::next
+    AB[["POST /api/automate/marketing-blast"]]:::next
+    AE[["GET&nbsp;&nbsp;/api/automate/recent-emails"]]:::next
+    AW[["GET&nbsp;&nbsp;/api/automate/recent-whatsapp"]]:::next
   end
 
-  API1 --> IG["Instagram Graph"]
-  API2 --> GEM["Gemini"]
-  API3 --> GEM
-  API4 --> CH["Channels · logs"]
-  P --> IG
-  S --> IG
-  H --> IG
+  subgraph INSIGHT["Insight &amp; analytics"]
+    direction TB
+    AN[["GET&nbsp;&nbsp;/api/analytics/[user]"]]:::next
+  end
 
-  classDef nextapi fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
-  classDef fastapi fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
-  classDef ext     fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
-  classDef ai      fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
-  classDef chan    fill:#fce7f3,stroke:#db2777,stroke-width:1.8px,color:#831843
+  subgraph SIDE["FastAPI sidecar · :8000"]
+    direction TB
+    SP[["POST /post"]]:::fast
+    SS[["POST /story"]]:::fast
+    SH[["POST /highlight"]]:::fast
+  end
 
-  class API1,API2,API3,API4 nextapi
-  class P,S,H fastapi
-  class IG ext
-  class GEM ai
-  class CH chan
+  GEM{{"Google Gemini"}}:::gem
+  IG{{"Instagram Graph"}}:::ig
+  EMAIL{{"Email · SMTP"}}:::ext
+  WHATS{{"WhatsApp Business"}}:::ext
+  FB[("Firebase<br/>Firestore")]:::db
 
-  style NextAPI fill:#faf5ff,stroke:#a78bfa,stroke-width:1.6px,color:#4c1d95
-  style Fast    fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
+  CLIENT ==> CONTENT
+  CLIENT ==> DELIVERY
+  CLIENT ==> INSIGHT
+  CLIENT ==> SIDE
+
+  GC --> GEM
+  GI --> GEM
+  AB --> EMAIL
+  AB --> WHATS
+  AM --> EMAIL
+  AM --> WHATS
+  AE --> FB
+  AW --> FB
+  AN --> IG
+  AN -.-> FB
+
+  SP --> IG
+  SS --> IG
+  SH --> IG
+
+  classDef client fill:#fce7f3,stroke:#db2777,stroke-width:2.2px,color:#831843
+  classDef next   fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+  classDef fast   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef gem    fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+  classDef ig     fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+  classDef ext    fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+  classDef db     fill:#fff7ed,stroke:#f59e0b,stroke-width:2px,color:#92400e
+
+  style CONTENT  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+  style DELIVERY fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+  style INSIGHT  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+  style SIDE     fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
 
   linkStyle default stroke:#94a3b8,stroke-width:1.4px
 ```
@@ -559,35 +620,32 @@ Interactive docs at <http://localhost:8000/docs> (Swagger) or `/redoc`.
 ## Roadmap
 
 ```mermaid
-%%{init: { "theme": "neutral" }}%%
-flowchart LR
-  subgraph near["Near term"]
-    n1["Shorts adapters<br/>deeper analytics"]
-    n2["Multi-account workspaces<br/>RBAC"]
-  end
-  subgraph mid["Mid term"]
-    m1["A/B captions and creatives"]
-    m2["CSV and Notion bulk import"]
-  end
-  subgraph later["Later"]
-    l1["Webhook publish queue<br/>retries"]
-    l2["SSR snapshots<br/>shareable reports"]
-  end
-  near --> mid --> later
-
-  classDef nearC  fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
-  classDef midC   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
-  classDef laterC fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
-
-  class n1,n2 nearC
-  class m1,m2 midC
-  class l1,l2 laterC
-
-  style near  fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
-  style mid   fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
-  style later fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-
-  linkStyle default stroke:#64748b,stroke-width:1.8px
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
+    "cScale0": "#16a34a",
+    "cScale1": "#2563eb",
+    "cScale2": "#7c3aed",
+    "cScalePeer0": "#dcfce7",
+    "cScalePeer1": "#dbeafe",
+    "cScalePeer2": "#ede9fe",
+    "cScaleLabel0": "#14532d",
+    "cScaleLabel1": "#1e3a8a",
+    "cScaleLabel2": "#4c1d95"
+  }
+}}%%
+timeline
+  title KnowMedia roadmap
+  section Near term · Q3 2026
+    Shipping next : TikTok adapter : YouTube Shorts metrics : Deeper IG insights
+    Identity      : Multi-account workspaces : Role-based access
+  section Mid term · Q4 2026
+    Experiments   : A/B captions : A/B creatives
+    Data import   : CSV bulk import : Notion bulk import
+  section Later · 2027
+    Reliability   : Webhook publish queue : Automatic retries
+    Sharing       : SSR analytics snapshots : Public shareable reports
 ```
 
 - TikTok and YouTube Shorts analytics adapters
@@ -637,35 +695,68 @@ flowchart LR
 
 <br />
 
+### Stack at a glance
+
 ```mermaid
 %%{init: {
   "theme": "base",
-  "themeVariables": {
-    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
-    "pie1": "#2563eb",
-    "pie2": "#7c3aed",
-    "pie3": "#16a34a",
-    "pie4": "#ea580c",
-    "pie5": "#d97706",
-    "pieTitleTextSize": "18px",
-    "pieTitleTextColor": "#0f172a",
-    "pieSectionTextSize": "13px",
-    "pieSectionTextColor": "#ffffff",
-    "pieStrokeColor": "#ffffff",
-    "pieStrokeWidth": "2px",
-    "pieOuterStrokeColor": "#cbd5e1",
-    "pieOuterStrokeWidth": "1px",
-    "pieLegendTextColor": "#0f172a",
-    "pieLegendTextSize": "13px",
-    "pieOpacity": "0.95"
-  }
+  "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" }
 }}%%
-pie showData title Where compute runs (illustrative split)
-    "Browser & Next.js UI" : 40
-    "Next.js route handlers" : 25
-    "Google Gemini" : 20
-    "FastAPI and Instagram" : 10
-    "Firebase" : 5
+flowchart TB
+  subgraph L_UI["What you see · UI &amp; design"]
+    direction LR
+    UI1["Next.js 15<br/>App Router"]:::ui
+    UI2["React 19"]:::ui
+    UI3["Tailwind CSS v4"]:::ui
+    UI4["Tremor 3"]:::ui
+    UI5["Recharts"]:::ui
+    UI6["Fabric.js 6"]:::ui
+    UI7["Lucide · Heroicons"]:::ui
+    UI8["React Colorful"]:::ui
+  end
+
+  subgraph L_API["What runs · server"]
+    direction LR
+    API1["Next.js<br/>Route Handlers"]:::api
+    API2["FastAPI 0.95<br/>Uvicorn"]:::api
+    API3["UUID"]:::api
+  end
+
+  subgraph L_AI["What thinks · AI"]
+    direction LR
+    AI1["@google/genai"]:::ai
+    AI2["@google/generative-ai"]:::ai
+  end
+
+  subgraph L_DATA["Where data lives · services"]
+    direction LR
+    D1["Firebase 11<br/>auth · firestore"]:::data
+    D2["Instagram Graph API"]:::data
+  end
+
+  subgraph L_OPS["How it ships · ops"]
+    direction LR
+    O1["Docker"]:::ops
+  end
+
+  L_UI ==> L_API
+  L_API ==> L_AI
+  L_AI ==> L_DATA
+  L_DATA ==> L_OPS
+
+  classDef ui   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
+  classDef api  fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
+  classDef ai   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
+  classDef data fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
+  classDef ops  fill:#fef3c7,stroke:#d97706,stroke-width:1.8px,color:#78350f
+
+  style L_UI   fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
+  style L_API  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
+  style L_AI   fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
+  style L_DATA fill:#fff7ed,stroke:#fdba74,stroke-width:1.6px,color:#7c2d12
+  style L_OPS  fill:#fefce8,stroke:#fde047,stroke-width:1.6px,color:#78350f
+
+  linkStyle default stroke:#64748b,stroke-width:2px
 ```
 
 <br />
