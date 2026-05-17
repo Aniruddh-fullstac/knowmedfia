@@ -2,16 +2,17 @@
 
 <br />
 
-# **KnowMedia**
+<!-- ═══ Hero ═══ -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=DM+Sans&weight=600&size=28&duration=2800&pause=1200&color=F8FAFC&center=true&vCenter=true&width=520&lines=KnowMedia;Plan+%E2%80%94+Create+%E2%80%94+Measure;Your+AI-native+social+workspace">
+  <img alt="KnowMedia — Plan, Create, Measure" src="https://readme-typing-svg.demolab.com?font=DM+Sans&weight=600&size=28&duration=2800&pause=1200&color=0F172A&center=true&vCenter=true&width=520&lines=KnowMedia;Plan+%E2%80%94+Create+%E2%80%94+Measure;Your+AI-native+social+workspace" width="520" />
+</picture>
 
-### *The AI-native social workspace for modern brands*
+<h3><em>The AI-native social workspace for modern brands</em></h3>
 
 <br />
 
-<p>
-  Plan feeds. Generate creatives. Schedule campaigns.<br/>
-  Read the room — all from a single, beautifully calm workspace.
-</p>
+Plan feeds · Generate creatives · Schedule campaigns · Read the room — **one calm, cohesive surface.**
 
 <br />
 
@@ -26,13 +27,38 @@
 
 </div>
 
+<p align="center">
+  <a href="#at-a-glance">Overview</a> ·
+  <a href="#whats-inside">Features</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#project-structure">Structure</a> ·
+  <a href="#api-surface">API</a>
+</p>
+
 ---
 
 ## At a glance
 
-**KnowMedia** is a Next.js workspace that brings social planning, generative content, marketing automation, and cross-platform analytics together under one roof. The frontend is a Next.js 15 App Router application with a Tremor + Recharts analytics surface and a Fabric-powered canvas editor. The backend is a small FastAPI service that talks to the Instagram Graph API. Generative tasks run on Google's Gemini models.
+**KnowMedia** is a Next.js workspace that brings **social planning**, **generative content**, **marketing automation**, and **cross-platform analytics** together under one roof. The frontend is a Next.js 15 App Router application with a Tremor + Recharts analytics surface and a Fabric-powered canvas editor. The backend is a small FastAPI service that talks to the Instagram Graph API. Generative tasks run on Google's Gemini models.
 
-> Built for solo creators and small social teams who want to ship faster than they could with Buffer, Hootsuite, or Later — and who want their reporting to feel less like a spreadsheet and more like a dashboard.
+> Built for solo creators and small social teams who want to ship faster than they could with Buffer, Hootsuite, or Later — and who want reporting to feel **less like a spreadsheet** and **more like a dashboard**.
+
+<br />
+
+### Product loop
+
+How teams move through the workspace — from intent to insight:
+
+```mermaid
+%%{init: { "theme": "neutral", "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" } }}%%
+flowchart LR
+  A(["Intent & ideas"]) --> B(["Calendar + grid"]) --> C(["Copy + visuals"]) --> D(["Queue & publish"]) --> E(["Analytics + AI"])
+  E -.->|"iterate"| A
+
+  classDef node fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#0f172a
+  class A,B,C,D,E node
+```
 
 <br />
 
@@ -102,15 +128,48 @@ Per-user profile pages with feed, posts, and engagement at a glance — useful f
 
 <br />
 
+### Feature map
+
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+mindmap
+  root((KnowMedia))
+    Plan
+      Editorial calendar
+      Grid planner
+      Drag-to-schedule
+    Create
+      Gemini copy
+      Gemini imagery
+      Fabric canvas
+    Automate
+      Email blasts
+      WhatsApp sends
+      Recent activity
+    Measure
+      Tremor dashboards
+      Recharts visuals
+      AI Insights
+    Identity
+      Firebase Auth
+      Google SSO
+```
+
+<br />
+
 ---
 
 ## Architecture
 
 A four-tier layout: **Experience** (Next.js App Router) → **API gateway** (Next.js Route Handlers) → **Intelligence plane** (generation, automation, analytics) → **Model & data plane** (Gemini, Instagram Graph, Firebase).
 
+### System topology
+
 ```mermaid
+%%{init: { "theme": "neutral" }}%%
 flowchart TB
   subgraph Experience["Experience layer"]
+    direction TB
     SPA["Next.js 15 · React 19<br/>Tailwind v4 · Tremor · Fabric"]
     AUTH["Firebase Auth<br/>Google SSO"]
   end
@@ -141,6 +200,48 @@ flowchart TB
   ANA --> IG
   ANA --> FB
   AUTH --> FB
+
+  classDef exp fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+  classDef gw fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95
+  classDef intel fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+  classDef data fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+  classDef db fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+
+  class SPA,AUTH exp
+  class ROUTES gw
+  class GEN,AUTO,ANA intel
+  class GEM,IG data
+  class FB db
+```
+
+<br />
+
+### Request voyage (generation example)
+
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+sequenceDiagram
+  autonumber
+  participant U as Creator
+  participant N as Next.js app
+  participant R as Route handler
+  participant G as Gemini API
+  participant F as Firebase
+  participant I as FastAPI / IG
+
+  U->>N: Compose brief + brand tone
+  N->>R: POST /api/generate/content
+  R->>G: Generate caption / hooks
+  G-->>R: Structured copy
+  R-->>N: Response
+  N-->>U: Inline suggestions + edits
+
+  opt Optional publish path
+    N->>R: POST /api/automate/*
+    R->>I: Sidecar Instagram / channel action
+    I-->>R: Delivery status
+    R->>F: Persist campaign metadata
+  end
 ```
 
 <br />
@@ -151,6 +252,35 @@ flowchart TB
 | **API gateway** | Server route handlers under `src/app/api/*` | `next` (server) |
 | **Intelligence** | Content + image generation, automation, analytics handlers | `@google/genai`, `@google/generative-ai`, `uuid` |
 | **Model & data** | Gemini, Instagram Graph, Firebase | `firebase`, FastAPI sidecar (`instagram_api.py`) |
+
+<br />
+
+### API routing overview
+
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+flowchart LR
+  subgraph NextAPI["Next.js /src/app/api"]
+    API1["/analytics/[user]"]
+    API2["/generate/content"]
+    API3["/generate/image"]
+    API4["/automate/*"]
+  end
+
+  subgraph Fast["FastAPI sidecar :8000"]
+    P["POST /post"]
+    S["POST /story"]
+    H["POST /highlight"]
+  end
+
+  API1 --> IG["Instagram Graph"]
+  API2 --> GEM["Gemini"]
+  API3 --> GEM
+  API4 --> CH["Channels · logs"]
+  P --> IG
+  S --> IG
+  H --> IG
+```
 
 <br />
 
@@ -170,8 +300,8 @@ flowchart TB
 ### Install
 
 ```bash
-git clone <your-fork-url>
-cd KnowMedia
+git clone https://github.com/Aniruddh-fullstac/knowmedfia.git
+cd knowmedfia
 npm install
 ```
 
@@ -209,6 +339,25 @@ uvicorn instagram_api:app --reload
 ```
 
 Open <http://localhost:3000> and sign in with your Google account.
+
+<br />
+
+### Local runtime (two processes)
+
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+flowchart TB
+  subgraph Dev["Your machine"]
+    FE["Next.js :3000<br/>App Router UI"]
+    BE["Uvicorn :8000<br/>instagram_api.py"]
+  end
+
+  U((You)) --> FE
+  FE -.->|REST| BE
+  FE --> GEM2((Gemini))
+  FE --> FB2((Firebase))
+  BE --> IG2((Instagram Graph))
+```
 
 <br />
 
@@ -298,6 +447,26 @@ Interactive docs at <http://localhost:8000/docs> (Swagger) or `/redoc`.
 
 ## Roadmap
 
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+flowchart LR
+  subgraph near["Near term"]
+    n1["Shorts adapters · deeper analytics"]
+    n2["Multi-account workspaces · RBAC"]
+  end
+  subgraph mid["Mid term"]
+    m1["A/B captions and creatives"]
+    m2["CSV and Notion bulk import"]
+  end
+  subgraph later["Later"]
+    l1["Webhook publish queue · retries"]
+    l2["SSR snapshots · shareable reports"]
+  end
+  near --> mid --> later
+  classDef phase fill:#f8fafc,stroke:#94a3b8,stroke-width:1.5px,color:#0f172a
+  class n1,n2,m1,m2,l1,l2 phase
+```
+
 - TikTok and YouTube Shorts analytics adapters
 - Multi-account workspaces with role-based access
 - Native A/B testing for captions and creatives
@@ -345,11 +514,23 @@ Interactive docs at <http://localhost:8000/docs> (Swagger) or `/redoc`.
 
 <br />
 
+```mermaid
+%%{init: { "theme": "neutral" }}%%
+pie title Where compute runs (illustrative split)
+    "Browser & Next.js UI" : 40
+    "Next.js route handlers" : 25
+    "Google Gemini" : 20
+    "FastAPI and Instagram" : 10
+    "Firebase" : 5
+```
+
+<br />
+
 ---
 
 <div align="center">
 
-<sub>Built with care.</sub><br/>
+**Built with care.**  
 <sub><strong>KnowMedia</strong> · 2026</sub>
 
 </div>
