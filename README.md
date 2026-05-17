@@ -207,81 +207,67 @@ A four-tier layout: **Experience** (Next.js App Router) → **API gateway** (Nex
 
 ### System topology
 
+<p align="center">
+  <img src="docs/assets/system-topology.svg" alt="KnowMedia system topology — Creator flows left to right through Experience, API Gateway, Intelligence, and Model and data tiers, with Firebase as a shared data platform" width="100%"/>
+</p>
+
+<details>
+<summary>View as Mermaid source</summary>
+
 ```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
-    "fontSize": "13px"
-  }
-}}%%
+%%{init: { "theme": "base", "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" } }}%%
 flowchart TB
   USER(("Creator")):::user
-
   subgraph L1["Experience layer"]
     direction LR
-    SPA(["Next.js 15 App<br/>React 19 · Tailwind v4"]):::ui
-    STUDIO(["Studio surfaces<br/>Tremor · Recharts · Fabric"]):::ui
-    AUTHN(["Firebase Auth<br/>Google SSO"]):::auth
+    SPA(["Next.js 15 App"]):::ui
+    STUDIO(["Studio surfaces"]):::ui
+    AUTHN(["Firebase Auth"]):::auth
   end
-
   subgraph L2["API gateway"]
     direction LR
     R1[["/api/generate/*"]]:::route
     R2[["/api/automate/*"]]:::route
     R3[["/api/analytics/[user]"]]:::route
   end
-
   subgraph L3["Intelligence plane"]
     direction LR
-    GEN["Generation<br/>copy · imagery"]:::logic
-    AUTO["Automation<br/>email · WhatsApp blasts"]:::logic
-    ANA["Analytics aggregation<br/>per-username insights"]:::logic
+    GEN["Generation"]:::logic
+    AUTO["Automation"]:::logic
+    ANA["Analytics"]:::logic
   end
-
   subgraph L4["Model &amp; data plane"]
     direction LR
-    GEM{{"Google Gemini<br/>@google/genai"}}:::ext
-    SIDECAR{{"FastAPI sidecar<br/>localhost:8000"}}:::ext
+    GEM{{"Google Gemini"}}:::ext
+    SIDECAR{{"FastAPI sidecar"}}:::ext
     IG{{"Instagram Graph"}}:::ext
-    FB[("Firebase<br/>auth · firestore")]:::db
+    FB[("Firebase")]:::db
   end
-
   USER ==>|"signs in"| AUTHN
   USER ==>|"composes"| SPA
-  SPA --- STUDIO
   AUTHN -.->|"session"| FB
-
   SPA ==>|"HTTP"| R1
   SPA ==>|"HTTP"| R2
   SPA ==>|"HTTP"| R3
-
   R1 --> GEN
   R2 --> AUTO
   R3 --> ANA
-
   GEN -->|"prompt"| GEM
   AUTO -->|"publish"| SIDECAR
   AUTO -.->|"log"| FB
   ANA -->|"metrics"| IG
   ANA -.->|"cache"| FB
   SIDECAR -->|"graph calls"| IG
-
-  classDef user  fill:#fce7f3,stroke:#db2777,stroke-width:2.2px,color:#831843
-  classDef ui    fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-  classDef auth  fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-  classDef route fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95
-  classDef logic fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-  classDef ext   fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-  classDef db    fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-
-  style L1 fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
-  style L2 fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-  style L3 fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
-  style L4 fill:#fff7ed,stroke:#fdba74,stroke-width:1.6px,color:#7c2d12
-
-  linkStyle default stroke:#94a3b8,stroke-width:1.4px
+  classDef user  fill:#fce7f3,stroke:#db2777,color:#831843
+  classDef ui    fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  classDef auth  fill:#fef3c7,stroke:#d97706,color:#78350f
+  classDef route fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+  classDef logic fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef ext   fill:#ffedd5,stroke:#ea580c,color:#7c2d12
+  classDef db    fill:#fef3c7,stroke:#d97706,color:#78350f
 ```
+
+</details>
 
 <br />
 
@@ -349,51 +335,44 @@ sequenceDiagram
 
 ### API routing overview
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" }
-}}%%
-flowchart LR
-  CLIENT(["Browser<br/>React UI"]):::client
+<p align="center">
+  <img src="docs/assets/api-routing.svg" alt="KnowMedia API routing — Browser fans out to four parallel route groups (Content, Delivery, Insight, Sidecar), each connecting to its specific external service" width="100%"/>
+</p>
 
+<details>
+<summary>View as Mermaid source</summary>
+
+```mermaid
+%%{init: { "theme": "base" }}%%
+flowchart LR
+  CLIENT(["Browser"]):::client
   subgraph CONTENT["Content creation"]
-    direction TB
     GC[["POST /api/generate/content"]]:::next
     GI[["POST /api/generate/image"]]:::next
   end
-
-  subgraph DELIVERY["Delivery &amp; comms"]
-    direction TB
+  subgraph DELIVERY["Delivery"]
     AM[["POST /api/automate"]]:::next
     AB[["POST /api/automate/marketing-blast"]]:::next
-    AE[["GET&nbsp;&nbsp;/api/automate/recent-emails"]]:::next
-    AW[["GET&nbsp;&nbsp;/api/automate/recent-whatsapp"]]:::next
+    AE[["GET /api/automate/recent-emails"]]:::next
+    AW[["GET /api/automate/recent-whatsapp"]]:::next
   end
-
-  subgraph INSIGHT["Insight &amp; analytics"]
-    direction TB
-    AN[["GET&nbsp;&nbsp;/api/analytics/[user]"]]:::next
+  subgraph INSIGHT["Insight"]
+    AN[["GET /api/analytics/[user]"]]:::next
   end
-
-  subgraph SIDE["FastAPI sidecar · :8000"]
-    direction TB
+  subgraph SIDE["FastAPI sidecar :8000"]
     SP[["POST /post"]]:::fast
     SS[["POST /story"]]:::fast
     SH[["POST /highlight"]]:::fast
   end
-
   GEM{{"Google Gemini"}}:::gem
   IG{{"Instagram Graph"}}:::ig
-  EMAIL{{"Email · SMTP"}}:::ext
-  WHATS{{"WhatsApp Business"}}:::ext
-  FB[("Firebase<br/>Firestore")]:::db
-
+  EMAIL{{"Email"}}:::ext
+  WHATS{{"WhatsApp"}}:::ext
+  FB[("Firebase")]:::db
   CLIENT ==> CONTENT
   CLIENT ==> DELIVERY
   CLIENT ==> INSIGHT
   CLIENT ==> SIDE
-
   GC --> GEM
   GI --> GEM
   AB --> EMAIL
@@ -404,26 +383,19 @@ flowchart LR
   AW --> FB
   AN --> IG
   AN -.-> FB
-
   SP --> IG
   SS --> IG
   SH --> IG
-
-  classDef client fill:#fce7f3,stroke:#db2777,stroke-width:2.2px,color:#831843
-  classDef next   fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
-  classDef fast   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
-  classDef gem    fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-  classDef ig     fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-  classDef ext    fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
-  classDef db     fill:#fff7ed,stroke:#f59e0b,stroke-width:2px,color:#92400e
-
-  style CONTENT  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-  style DELIVERY fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-  style INSIGHT  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-  style SIDE     fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
-
-  linkStyle default stroke:#94a3b8,stroke-width:1.4px
+  classDef client fill:#fce7f3,stroke:#db2777,color:#831843
+  classDef next   fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+  classDef fast   fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef gem    fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  classDef ig     fill:#ffedd5,stroke:#ea580c,color:#7c2d12
+  classDef ext    fill:#fef3c7,stroke:#d97706,color:#78350f
+  classDef db     fill:#fff7ed,stroke:#f59e0b,color:#92400e
 ```
+
+</details>
 
 <br />
 
@@ -619,22 +591,15 @@ Interactive docs at <http://localhost:8000/docs> (Swagger) or `/redoc`.
 
 ## Roadmap
 
+<p align="center">
+  <img src="docs/assets/roadmap.svg" alt="KnowMedia roadmap — three horizontal phases (Near term Q3 2026, Mid term Q4 2026, Later 2027), each with two themed swim lanes of milestones, plus a now marker and a time axis" width="100%"/>
+</p>
+
+<details>
+<summary>View as Mermaid source</summary>
+
 ```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "fontFamily": "ui-sans-serif, system-ui, sans-serif",
-    "cScale0": "#16a34a",
-    "cScale1": "#2563eb",
-    "cScale2": "#7c3aed",
-    "cScalePeer0": "#dcfce7",
-    "cScalePeer1": "#dbeafe",
-    "cScalePeer2": "#ede9fe",
-    "cScaleLabel0": "#14532d",
-    "cScaleLabel1": "#1e3a8a",
-    "cScaleLabel2": "#4c1d95"
-  }
-}}%%
+%%{init: { "theme": "base" }}%%
 timeline
   title KnowMedia roadmap
   section Near term · Q3 2026
@@ -647,6 +612,8 @@ timeline
     Reliability   : Webhook publish queue : Automatic retries
     Sharing       : SSR analytics snapshots : Public shareable reports
 ```
+
+</details>
 
 - TikTok and YouTube Shorts analytics adapters
 - Multi-account workspaces with role-based access
@@ -697,67 +664,50 @@ timeline
 
 ### Stack at a glance
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": { "fontFamily": "ui-sans-serif, system-ui, sans-serif" }
-}}%%
-flowchart TB
-  subgraph L_UI["What you see · UI &amp; design"]
-    direction LR
-    UI1["Next.js 15<br/>App Router"]:::ui
-    UI2["React 19"]:::ui
-    UI3["Tailwind CSS v4"]:::ui
-    UI4["Tremor 3"]:::ui
-    UI5["Recharts"]:::ui
-    UI6["Fabric.js 6"]:::ui
-    UI7["Lucide · Heroicons"]:::ui
-    UI8["React Colorful"]:::ui
-  end
+<p align="center">
+  <img src="docs/assets/tech-stack.svg" alt="KnowMedia tech stack — five columns from left to right: UI and design, Server runtime, AI plane, Data services, Ops and ship, each listing the dependencies in that layer" width="100%"/>
+</p>
 
-  subgraph L_API["What runs · server"]
-    direction LR
-    API1["Next.js<br/>Route Handlers"]:::api
-    API2["FastAPI 0.95<br/>Uvicorn"]:::api
+<details>
+<summary>View as Mermaid source</summary>
+
+```mermaid
+%%{init: { "theme": "base" }}%%
+flowchart LR
+  subgraph L_UI["UI &amp; design"]
+    UI1["Next.js 15"]:::ui
+    UI2["React 19"]:::ui
+    UI3["Tailwind v4"]:::ui
+    UI4["Tremor"]:::ui
+    UI5["Recharts"]:::ui
+    UI6["Fabric.js"]:::ui
+  end
+  subgraph L_API["Server"]
+    API1["Route Handlers"]:::api
+    API2["FastAPI"]:::api
     API3["UUID"]:::api
   end
-
-  subgraph L_AI["What thinks · AI"]
-    direction LR
+  subgraph L_AI["AI plane"]
     AI1["@google/genai"]:::ai
     AI2["@google/generative-ai"]:::ai
   end
-
-  subgraph L_DATA["Where data lives · services"]
-    direction LR
-    D1["Firebase 11<br/>auth · firestore"]:::data
-    D2["Instagram Graph API"]:::data
+  subgraph L_DATA["Data"]
+    D1["Firebase 11"]:::data
+    D2["Instagram Graph"]:::data
   end
-
-  subgraph L_OPS["How it ships · ops"]
-    direction LR
+  subgraph L_OPS["Ops"]
     O1["Docker"]:::ops
+    O2["Uvicorn"]:::ops
   end
-
-  L_UI ==> L_API
-  L_API ==> L_AI
-  L_AI ==> L_DATA
-  L_DATA ==> L_OPS
-
-  classDef ui   fill:#dbeafe,stroke:#2563eb,stroke-width:1.8px,color:#1e3a8a
-  classDef api  fill:#ede9fe,stroke:#7c3aed,stroke-width:1.8px,color:#4c1d95
-  classDef ai   fill:#dcfce7,stroke:#16a34a,stroke-width:1.8px,color:#14532d
-  classDef data fill:#ffedd5,stroke:#ea580c,stroke-width:1.8px,color:#7c2d12
-  classDef ops  fill:#fef3c7,stroke:#d97706,stroke-width:1.8px,color:#78350f
-
-  style L_UI   fill:#eff6ff,stroke:#93c5fd,stroke-width:1.6px,color:#1e3a8a
-  style L_API  fill:#faf5ff,stroke:#c4b5fd,stroke-width:1.6px,color:#4c1d95
-  style L_AI   fill:#f0fdf4,stroke:#86efac,stroke-width:1.6px,color:#14532d
-  style L_DATA fill:#fff7ed,stroke:#fdba74,stroke-width:1.6px,color:#7c2d12
-  style L_OPS  fill:#fefce8,stroke:#fde047,stroke-width:1.6px,color:#78350f
-
-  linkStyle default stroke:#64748b,stroke-width:2px
+  L_UI ==> L_API ==> L_AI ==> L_DATA ==> L_OPS
+  classDef ui   fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  classDef api  fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+  classDef ai   fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef data fill:#ffedd5,stroke:#ea580c,color:#7c2d12
+  classDef ops  fill:#fef3c7,stroke:#d97706,color:#78350f
 ```
+
+</details>
 
 <br />
 

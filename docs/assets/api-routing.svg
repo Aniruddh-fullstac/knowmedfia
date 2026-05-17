@@ -1,0 +1,222 @@
+<svg viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="api-t api-d" preserveAspectRatio="xMidYMid meet">
+<title id="api-t">KnowMedia · API routing</title>
+<desc id="api-d">Horizontal routing diagram. The browser on the left fans out into four parallel route groups — Content creation, Delivery and comms, Insight and analytics, and the FastAPI Instagram sidecar. Each route connects to its specific external service: Gemini, Email, WhatsApp, Instagram Graph, or Firebase.</desc>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M1 1.5 L8.5 5 L1 8.5" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <filter id="sh" x="-10%" y="-30%" width="120%" height="160%">
+    <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#0f172a" flood-opacity="0.07"/>
+  </filter>
+  <style>
+    .h     { font: 700 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; letter-spacing: 0.14em; fill: #64748b; text-anchor: middle; }
+    .h-l   { font: 700 11px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; letter-spacing: 0.1em; text-anchor: start; }
+    .lbl   { font: 600 12.5px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; text-anchor: middle; dominant-baseline: middle; fill: #1f1e1d; }
+    .lbl-w { font: 600 13px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; text-anchor: middle; dominant-baseline: middle; fill: #ffffff; }
+    .mono  { font: 500 11.5px "SF Mono", Menlo, monospace; text-anchor: middle; dominant-baseline: middle; fill: #1f1e1d; }
+    .verb  { font: 700 10px "SF Mono", Menlo, monospace; fill: #db2777; }
+    .verb-g{ font: 700 10px "SF Mono", Menlo, monospace; fill: #2563eb; }
+    .sub   { font: 400 10.5px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; text-anchor: middle; dominant-baseline: middle; fill: #6e6b65; }
+    .e     { font: 500 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; fill: #64748b; text-anchor: middle; }
+    .node  { fill: #ffffff; stroke: #d6d3cd; stroke-width: 1; }
+    .flow  { stroke: #a8a59e; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+    .bold  { stroke: #475569; stroke-width: 1.8; fill: none; stroke-linecap: round; }
+    .dot   { stroke: #94a3b8; stroke-width: 1.2; fill: none; stroke-linecap: round; stroke-dasharray: 3 3; }
+  </style>
+</defs>
+
+<rect width="1200" height="720" fill="#fafaf9"/>
+
+<!-- Lane backgrounds (4 horizontal pastel lanes) -->
+<rect x="190" y="68"  width="640" height="130" rx="14" fill="#f0fdf4" opacity="0.55"/>
+<rect x="190" y="208" width="640" height="200" rx="14" fill="#fff7ed" opacity="0.55"/>
+<rect x="190" y="418" width="640" height="90"  rx="14" fill="#eff6ff" opacity="0.55"/>
+<rect x="190" y="518" width="640" height="180" rx="14" fill="#faf5ff" opacity="0.55"/>
+
+<!-- Lane labels -->
+<text class="h-l" x="208" y="88"  fill="#16a34a">CONTENT  ·  CREATE</text>
+<text class="h-l" x="208" y="228" fill="#c2410c">DELIVERY  ·  COMMS</text>
+<text class="h-l" x="208" y="438" fill="#2563eb">INSIGHT  ·  ANALYTICS</text>
+<text class="h-l" x="208" y="538" fill="#7c3aed">SIDECAR  ·  FASTAPI :8000</text>
+
+<!-- Section labels -->
+<text class="h" x="100"  y="30">CLIENT</text>
+<text class="h" x="510" y="30">ROUTE HANDLERS</text>
+<text class="h" x="990" y="30">EXTERNAL SERVICES</text>
+
+<!-- ═════ CLIENT ═════ -->
+<rect x="40" y="340" width="120" height="50" rx="10" fill="#DA7756" stroke="#DA7756" stroke-width="1" filter="url(#sh)"/>
+<text class="lbl-w" x="100" y="358">Browser</text>
+<text class="sub" x="100" y="376" fill="#fed7c4">React UI</text>
+
+<!-- ═════ LANE 1: CONTENT CREATION ═════ -->
+<g>
+  <rect class="node" x="280" y="108" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="125" r="3" fill="#16a34a"/>
+  <text class="verb" x="306" y="129" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="127">/api/generate/content</text>
+</g>
+<g>
+  <rect class="node" x="280" y="152" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="169" r="3" fill="#16a34a"/>
+  <text class="verb" x="306" y="173" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="171">/api/generate/image</text>
+</g>
+
+<!-- ═════ LANE 2: DELIVERY ═════ -->
+<g>
+  <rect class="node" x="280" y="248" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="265" r="3" fill="#ea580c"/>
+  <text class="verb" x="306" y="269" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="267">/api/automate</text>
+</g>
+<g>
+  <rect class="node" x="280" y="288" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="305" r="3" fill="#ea580c"/>
+  <text class="verb" x="306" y="309" text-anchor="start">POST</text>
+  <text class="mono" x="426" y="307">/api/automate/marketing-blast</text>
+</g>
+<g>
+  <rect class="node" x="280" y="328" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="345" r="3" fill="#ea580c"/>
+  <text class="verb-g" x="306" y="349" text-anchor="start">GET</text>
+  <text class="mono" x="424" y="347">/api/automate/recent-emails</text>
+</g>
+<g>
+  <rect class="node" x="280" y="368" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="385" r="3" fill="#ea580c"/>
+  <text class="verb-g" x="306" y="389" text-anchor="start">GET</text>
+  <text class="mono" x="424" y="387">/api/automate/recent-whatsapp</text>
+</g>
+
+<!-- ═════ LANE 3: INSIGHT ═════ -->
+<g>
+  <rect class="node" x="280" y="458" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="475" r="3" fill="#2563eb"/>
+  <text class="verb-g" x="306" y="479" text-anchor="start">GET</text>
+  <text class="mono" x="424" y="477">/api/analytics/[user]</text>
+</g>
+
+<!-- ═════ LANE 4: SIDECAR ═════ -->
+<g>
+  <rect class="node" x="280" y="558" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="575" r="3" fill="#7c3aed"/>
+  <text class="verb" x="306" y="579" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="577">/post</text>
+</g>
+<g>
+  <rect class="node" x="280" y="598" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="615" r="3" fill="#7c3aed"/>
+  <text class="verb" x="306" y="619" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="617">/story</text>
+</g>
+<g>
+  <rect class="node" x="280" y="638" width="240" height="34" rx="8" filter="url(#sh)"/>
+  <circle cx="294" cy="655" r="3" fill="#7c3aed"/>
+  <text class="verb" x="306" y="659" text-anchor="start">POST</text>
+  <text class="mono" x="424" y="657">/highlight</text>
+</g>
+
+<!-- ═════ EXTERNAL SERVICES ═════ -->
+<!-- Gemini -->
+<g>
+  <path d="M 910 110 L 1090 110 L 1115 135 L 1090 160 L 910 160 L 885 135 Z" class="node" filter="url(#sh)"/>
+  <circle cx="903" cy="135" r="3.5" fill="#6366F1"/>
+  <text class="lbl" x="1000" y="129">Google Gemini</text>
+  <text class="sub" x="1000" y="146">@google/genai</text>
+</g>
+
+<!-- Email -->
+<g>
+  <path d="M 910 220 L 1090 220 L 1115 245 L 1090 270 L 910 270 L 885 245 Z" class="node" filter="url(#sh)"/>
+  <circle cx="903" cy="245" r="3.5" fill="#DA7756"/>
+  <text class="lbl" x="1000" y="239">Email · SMTP</text>
+  <text class="sub" x="1000" y="256">transactional sender</text>
+</g>
+
+<!-- WhatsApp -->
+<g>
+  <path d="M 910 290 L 1090 290 L 1115 315 L 1090 340 L 910 340 L 885 315 Z" class="node" filter="url(#sh)"/>
+  <circle cx="903" cy="315" r="3.5" fill="#DA7756"/>
+  <text class="lbl" x="1000" y="309">WhatsApp Business</text>
+  <text class="sub" x="1000" y="326">cloud API</text>
+</g>
+
+<!-- Instagram Graph -->
+<g>
+  <path d="M 910 458 L 1090 458 L 1115 483 L 1090 508 L 910 508 L 885 483 Z" class="node" filter="url(#sh)"/>
+  <circle cx="903" cy="483" r="3.5" fill="#DA7756"/>
+  <text class="lbl" x="1000" y="477">Instagram Graph</text>
+  <text class="sub" x="1000" y="494">graph.facebook.com</text>
+</g>
+
+<!-- Instagram Graph (sidecar target) -->
+<g>
+  <path d="M 910 590 L 1090 590 L 1115 615 L 1090 640 L 910 640 L 885 615 Z" class="node" filter="url(#sh)"/>
+  <circle cx="903" cy="615" r="3.5" fill="#DA7756"/>
+  <text class="lbl" x="1000" y="609">Instagram Graph</text>
+  <text class="sub" x="1000" y="626">media · stories · highlights</text>
+</g>
+
+<!-- ═════ FIREBASE (shared, right side) ═════ -->
+<g>
+  <ellipse cx="1000" cy="380" rx="78" ry="6" fill="#fef3c7" opacity="0.8"/>
+  <rect class="node" x="922" y="380" width="156" height="56" rx="0" filter="url(#sh)"/>
+  <ellipse cx="1000" cy="380" rx="78" ry="6" fill="#ffffff" stroke="#d6d3cd" stroke-width="1"/>
+  <ellipse cx="1000" cy="436" rx="78" ry="6" fill="#ffffff" stroke="#d6d3cd" stroke-width="1"/>
+  <circle cx="935" cy="408" r="3.5" fill="#F59E0B"/>
+  <text class="lbl" x="1000" y="404">Firebase</text>
+  <text class="sub" x="1000" y="420">Firestore</text>
+</g>
+
+<!-- ═════ CONNECTIONS ═════ -->
+<!-- Client → Lane 1 (Content) -->
+<path d="M 160 365 Q 220 365 220 145 L 278 145" class="bold" marker-end="url(#ar)"/>
+
+<!-- Client → Lane 2 (Delivery) -->
+<path d="M 160 365 Q 240 365 240 305 L 278 305" class="bold" marker-end="url(#ar)"/>
+
+<!-- Client → Lane 3 (Insight) -->
+<path d="M 160 365 Q 240 365 240 475 L 278 475" class="bold" marker-end="url(#ar)"/>
+
+<!-- Client → Lane 4 (Sidecar) -->
+<path d="M 160 365 Q 220 365 220 600 L 278 600" class="bold" marker-end="url(#ar)"/>
+
+<!-- Content routes → Gemini -->
+<path d="M 520 125 Q 700 125 700 130 L 883 130" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 169 Q 700 169 700 140 L 883 140" class="flow" marker-end="url(#ar)"/>
+
+<!-- Delivery routes → Email/WhatsApp -->
+<path d="M 520 265 Q 700 265 700 240 L 883 240" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 305 Q 700 305 700 250 L 883 250" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 305 Q 700 305 700 310 L 883 310" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 265 Q 700 265 700 320 L 883 320" class="flow" marker-end="url(#ar)"/>
+<!-- recent-emails → Firebase -->
+<path d="M 520 345 Q 700 345 700 395 L 920 395" class="dot" marker-end="url(#ar)"/>
+<!-- recent-whatsapp → Firebase -->
+<path d="M 520 385 Q 700 385 700 405 L 920 405" class="dot" marker-end="url(#ar)"/>
+
+<!-- Insight route → Instagram Graph -->
+<path d="M 520 475 Q 700 475 700 480 L 883 480" class="flow" marker-end="url(#ar)"/>
+<!-- Insight → Firebase (cache) -->
+<path d="M 520 475 Q 700 475 700 418 L 920 418" class="dot" marker-end="url(#ar)"/>
+
+<!-- Sidecar routes → Instagram Graph -->
+<path d="M 520 575 Q 700 575 700 605 L 883 605" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 615 Q 700 615 700 615 L 883 615" class="flow" marker-end="url(#ar)"/>
+<path d="M 520 655 Q 700 655 700 625 L 883 625" class="flow" marker-end="url(#ar)"/>
+
+<!-- ═════ LEGEND ═════ -->
+<g transform="translate(40, 690)">
+  <text class="h" x="0" y="0" text-anchor="start">LEGEND</text>
+  <line x1="68" y1="-4" x2="100" y2="-4" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/>
+  <text class="e" x="120" y="-2" text-anchor="start">client entry</text>
+  <line x1="200" y1="-4" x2="232" y2="-4" stroke="#a8a59e" stroke-width="1.4" stroke-linecap="round"/>
+  <text class="e" x="254" y="-2" text-anchor="start">request</text>
+  <line x1="316" y1="-4" x2="348" y2="-4" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3 3" stroke-linecap="round"/>
+  <text class="e" x="380" y="-2" text-anchor="start">data read / write</text>
+  <text class="verb" x="500" y="-2" text-anchor="start">POST</text>
+  <text class="verb-g" x="540" y="-2" text-anchor="start">GET</text>
+  <text class="e" x="580" y="-2" text-anchor="start">HTTP verbs</text>
+</g>
+</svg>

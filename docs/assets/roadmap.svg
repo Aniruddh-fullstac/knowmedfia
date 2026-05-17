@@ -1,0 +1,172 @@
+<svg viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rm-t rm-d" preserveAspectRatio="xMidYMid meet">
+<title id="rm-t">KnowMedia · Roadmap</title>
+<desc id="rm-d">Horizontal three-phase roadmap. Near term in Q3 2026 covers shipping next and identity work. Mid term in Q4 2026 covers experiments and data import. Later in 2027 covers reliability and sharing. A now marker sits at the left and a time arrow runs across the bottom.</desc>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1.5 L8.5 5 L1 8.5" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <filter id="sh" x="-10%" y="-30%" width="120%" height="160%">
+    <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#0f172a" flood-opacity="0.07"/>
+  </filter>
+  <style>
+    .h     { font: 700 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; letter-spacing: 0.14em; fill: #64748b; }
+    .phase { font: 700 16px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; text-anchor: start; }
+    .phase-sub { font: 500 11px "SF Mono", Menlo, monospace; text-anchor: start; }
+    .swim  { font: 700 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; letter-spacing: 0.12em; fill: #64748b; text-anchor: start; }
+    .chip  { font: 600 12px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; text-anchor: start; dominant-baseline: middle; fill: #1f1e1d; }
+    .e     { font: 500 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; fill: #64748b; }
+    .now   { font: 700 10px ui-sans-serif, system-ui, -apple-system, "Anthropic Sans", sans-serif; letter-spacing: 0.1em; fill: #ffffff; text-anchor: middle; }
+  </style>
+</defs>
+
+<rect width="1200" height="480" fill="#fafaf9"/>
+
+<!-- ═════ PHASE BACKGROUNDS ═════ -->
+<rect x="60"  y="80" width="350" height="320" rx="14" fill="#f0fdf4" opacity="0.7"/>
+<rect x="425" y="80" width="350" height="320" rx="14" fill="#eff6ff" opacity="0.7"/>
+<rect x="790" y="80" width="350" height="320" rx="14" fill="#faf5ff" opacity="0.7"/>
+
+<!-- ═════ PHASE HEADER STRIPS ═════ -->
+<rect x="60"  y="80" width="350" height="50" rx="14" fill="#16a34a"/>
+<rect x="60"  y="116" width="350" height="14" fill="#16a34a"/>
+<rect x="425" y="80" width="350" height="50" rx="14" fill="#2563eb"/>
+<rect x="425" y="116" width="350" height="14" fill="#2563eb"/>
+<rect x="790" y="80" width="350" height="50" rx="14" fill="#7c3aed"/>
+<rect x="790" y="116" width="350" height="14" fill="#7c3aed"/>
+
+<!-- Phase titles -->
+<text class="phase" x="84" y="108" fill="#ffffff">Near term</text>
+<text class="phase-sub" x="84" y="126" fill="#bbf7d0">Q3 · 2026</text>
+
+<text class="phase" x="449" y="108" fill="#ffffff">Mid term</text>
+<text class="phase-sub" x="449" y="126" fill="#bfdbfe">Q4 · 2026</text>
+
+<text class="phase" x="814" y="108" fill="#ffffff">Later</text>
+<text class="phase-sub" x="814" y="126" fill="#ddd6fe">2027</text>
+
+<!-- Phase number badges (right side of header) -->
+<circle cx="386" cy="105" r="14" fill="#ffffff" opacity="0.95"/>
+<text class="phase" x="382" y="111" fill="#16a34a">01</text>
+<circle cx="751" cy="105" r="14" fill="#ffffff" opacity="0.95"/>
+<text class="phase" x="747" y="111" fill="#2563eb">02</text>
+<circle cx="1116" cy="105" r="14" fill="#ffffff" opacity="0.95"/>
+<text class="phase" x="1112" y="111" fill="#7c3aed">03</text>
+
+<!-- ═════ NEAR TERM CONTENT ═════ -->
+<text class="swim" x="84" y="160" fill="#15803d">SHIPPING NEXT</text>
+<g>
+  <rect x="84" y="170" width="302" height="34" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="100" cy="187" r="3.5" fill="#16a34a"/>
+  <text class="chip" x="114" y="189">TikTok adapter</text>
+</g>
+<g>
+  <rect x="84" y="210" width="302" height="34" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="100" cy="227" r="3.5" fill="#16a34a"/>
+  <text class="chip" x="114" y="229">YouTube Shorts metrics</text>
+</g>
+<g>
+  <rect x="84" y="250" width="302" height="34" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="100" cy="267" r="3.5" fill="#16a34a"/>
+  <text class="chip" x="114" y="269">Deeper Instagram insights</text>
+</g>
+
+<text class="swim" x="84" y="312" fill="#15803d">IDENTITY</text>
+<g>
+  <rect x="84" y="322" width="302" height="34" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="100" cy="339" r="3.5" fill="#16a34a"/>
+  <text class="chip" x="114" y="341">Multi-account workspaces</text>
+</g>
+<g>
+  <rect x="84" y="362" width="302" height="34" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="100" cy="379" r="3.5" fill="#16a34a"/>
+  <text class="chip" x="114" y="381">Role-based access (RBAC)</text>
+</g>
+
+<!-- ═════ MID TERM CONTENT ═════ -->
+<text class="swim" x="449" y="160" fill="#1d4ed8">EXPERIMENTS</text>
+<g>
+  <rect x="449" y="170" width="302" height="34" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="465" cy="187" r="3.5" fill="#2563eb"/>
+  <text class="chip" x="479" y="189">A/B testing on captions</text>
+</g>
+<g>
+  <rect x="449" y="210" width="302" height="34" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="465" cy="227" r="3.5" fill="#2563eb"/>
+  <text class="chip" x="479" y="229">A/B testing on creatives</text>
+</g>
+
+<text class="swim" x="449" y="272" fill="#1d4ed8">DATA IMPORT</text>
+<g>
+  <rect x="449" y="282" width="302" height="34" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="465" cy="299" r="3.5" fill="#2563eb"/>
+  <text class="chip" x="479" y="301">CSV bulk import</text>
+</g>
+<g>
+  <rect x="449" y="322" width="302" height="34" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="465" cy="339" r="3.5" fill="#2563eb"/>
+  <text class="chip" x="479" y="341">Notion bulk import</text>
+</g>
+<g>
+  <rect x="449" y="362" width="302" height="34" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="465" cy="379" r="3.5" fill="#2563eb"/>
+  <text class="chip" x="479" y="381">Stripe / billing primitives</text>
+</g>
+
+<!-- ═════ LATER CONTENT ═════ -->
+<text class="swim" x="814" y="160" fill="#6d28d9">RELIABILITY</text>
+<g>
+  <rect x="814" y="170" width="302" height="34" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="830" cy="187" r="3.5" fill="#7c3aed"/>
+  <text class="chip" x="844" y="189">Webhook publish queue</text>
+</g>
+<g>
+  <rect x="814" y="210" width="302" height="34" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="830" cy="227" r="3.5" fill="#7c3aed"/>
+  <text class="chip" x="844" y="229">Automatic retries + DLQ</text>
+</g>
+
+<text class="swim" x="814" y="272" fill="#6d28d9">SHARING</text>
+<g>
+  <rect x="814" y="282" width="302" height="34" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="830" cy="299" r="3.5" fill="#7c3aed"/>
+  <text class="chip" x="844" y="301">SSR analytics snapshots</text>
+</g>
+<g>
+  <rect x="814" y="322" width="302" height="34" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="830" cy="339" r="3.5" fill="#7c3aed"/>
+  <text class="chip" x="844" y="341">Public shareable reports</text>
+</g>
+<g>
+  <rect x="814" y="362" width="302" height="34" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="1" filter="url(#sh)"/>
+  <circle cx="830" cy="379" r="3.5" fill="#7c3aed"/>
+  <text class="chip" x="844" y="381">Team digest summaries</text>
+</g>
+
+<!-- ═════ PHASE PROGRESSION ARROWS ═════ -->
+<path d="M 410 235 L 425 235" stroke="#94a3b8" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+<path d="M 775 235 L 790 235" stroke="#94a3b8" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+
+<!-- ═════ TIME ARROW (bottom) ═════ -->
+<line x1="60" y1="438" x2="1140" y2="438" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+<path d="M 1135 432 L 1148 438 L 1135 444" fill="none" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- Now marker -->
+<g>
+  <rect x="40" y="424" width="48" height="28" rx="14" fill="#DA7756" filter="url(#sh)"/>
+  <text class="now" x="64" y="442">NOW</text>
+</g>
+<text class="e" x="64" y="468" text-anchor="middle">May 2026</text>
+
+<!-- Quarter ticks -->
+<line x1="235" y1="432" x2="235" y2="444" stroke="#cbd5e1" stroke-width="2"/>
+<text class="e" x="235" y="468" text-anchor="middle">Q3 ’26</text>
+
+<line x1="600" y1="432" x2="600" y2="444" stroke="#cbd5e1" stroke-width="2"/>
+<text class="e" x="600" y="468" text-anchor="middle">Q4 ’26</text>
+
+<line x1="965" y1="432" x2="965" y2="444" stroke="#cbd5e1" stroke-width="2"/>
+<text class="e" x="965" y="468" text-anchor="middle">2027 →</text>
+
+<!-- Header label -->
+<text class="h" x="60" y="46" text-anchor="start">ROADMAP  ·  THREE PHASES  ·  EIGHT THEMES</text>
+</svg>
